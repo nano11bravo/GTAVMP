@@ -1,6 +1,5 @@
 ﻿using GTAServer;
 
-
 namespace Race
 {
     public class Race

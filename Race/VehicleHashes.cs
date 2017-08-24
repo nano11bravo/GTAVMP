@@ -1,7 +1,11 @@
 ﻿namespace Race
 {
+    /// <summary>
+    /// VehicleHash - Keeps a list of hash values for every vehicle in GTA5.
+    /// </summary>
     public enum VehicleHash : uint
     {
+        // Begin decent
         Adder = 0xB779A091,
 		Airbus = 0x4C80EB0E,
 		Airtug = 0x5D0AAC8F,

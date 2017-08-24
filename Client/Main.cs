@@ -111,13 +111,14 @@ namespace GTACoOp
 
 
             #region Menu Set up
-#warning Affects performance when open, drops from 80~100 on a GTX 980 to high 30s ~ 60
+            // TODO: [SDW] Affects performance when open, drops from 80~100 on a GTX 980 to high 30s ~ 60
             _menuPool = new MenuPool();
 
-            _mainMenu = new UIMenu("Co-oP", "MAIN MENU");
-            _settingsMenu = new UIMenu("Co-oP", "SETTINGS");
-            _serverBrowserMenu = new UIMenu("Co-oP", "SERVER BROWSER");
-            _playersMenu = new UIMenu("Co-oP", "PLAYER LIST");
+            // TODO: [SDW] Re-visit UIMenu, possibly use strings instead of hard code.
+            _mainMenu = new UIMenu("Multiplayer", "MAIN MENU");
+            _settingsMenu = new UIMenu("Multiplayer", "SETTINGS");
+            _serverBrowserMenu = new UIMenu("Multiplayer", "SERVER BROWSER");
+            _playersMenu = new UIMenu("Multiplayer", "PLAYER LIST");
 
             _serverBrowserMenu.SetMenuWidthOffset(300);
 

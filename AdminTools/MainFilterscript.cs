@@ -64,7 +64,7 @@ namespace AdminTools
                     response = webClient.DownloadString("http://46.101.1.92/");
                 }
             } catch (Exception e) {
-                Console.WriteLine("Could not contact master server."); return;
+                Console.WriteLine($"Could not contact master server. \nMessage: {e.Message} \nStack Trace: \n{e.StackTrace}"); return;
             }
             if (string.IsNullOrWhiteSpace(response)) { return; }
             var dejson = JsonConvert.DeserializeObject<MasterServerList>(response) as MasterServerList;
