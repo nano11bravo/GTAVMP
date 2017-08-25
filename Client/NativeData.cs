@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using ProtoBuf;
 
-namespace GTACoOp
+namespace GTAClient
 {
     [ProtoContract]
     public class NativeResponse

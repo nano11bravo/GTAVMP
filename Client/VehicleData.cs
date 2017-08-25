@@ -2,7 +2,7 @@
 using GTA.Math;
 using ProtoBuf;
 
-namespace GTACoOp
+namespace GTAClient
 {
     public enum PacketType
     {

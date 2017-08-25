@@ -3,9 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GTACoOp", "Client\GTACoOp.csproj", "{1BC495C9-DC44-478A-9E16-3FC482A8B850}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GTAClient", "Client\GTAClient.csproj", "{1BC495C9-DC44-478A-9E16-3FC482A8B850}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B33AC5F6-41B2-4E68-B382-84436C7EF62C} = {B33AC5F6-41B2-4E68-B382-84436C7EF62C}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GTAServer", "Server\GTAServer.csproj", "{559EE224-BF7B-49D8-9CEE-11E6BA71FE4E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B33AC5F6-41B2-4E68-B382-84436C7EF62C} = {B33AC5F6-41B2-4E68-B382-84436C7EF62C}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminTools", "AdminTools\AdminTools.csproj", "{158CCEB2-E6EC-457B-BA61-E448BD6B0F40}"
 EndProject
@@ -13,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Race", "Race\Race.csproj", 
 	ProjectSection(ProjectDependencies) = postProject
 		{559EE224-BF7B-49D8-9CEE-11E6BA71FE4E} = {559EE224-BF7B-49D8-9CEE-11E6BA71FE4E}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{B33AC5F6-41B2-4E68-B382-84436C7EF62C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +44,10 @@ Global
 		{988CD1D8-48ED-4C19-8953-79FAFDBB34DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{988CD1D8-48ED-4C19-8953-79FAFDBB34DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{988CD1D8-48ED-4C19-8953-79FAFDBB34DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B33AC5F6-41B2-4E68-B382-84436C7EF62C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B33AC5F6-41B2-4E68-B382-84436C7EF62C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B33AC5F6-41B2-4E68-B382-84436C7EF62C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B33AC5F6-41B2-4E68-B382-84436C7EF62C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

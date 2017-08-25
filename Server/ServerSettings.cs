@@ -18,14 +18,14 @@
         public ServerSettings()
         {
             Port = 4499;
-            MaxPlayers = 16;
-            Name = "Simple GTA Server";
-            Password = "changeme";
+            MaxPlayers = 32;
+            Name = "Seven-Labs | Development Server";
+            Password = "letmein";
             PasswordProtected = false;
             Gamemode = "freeroam";
             Announce = true;
             AllowDisplayNames = true;
-            MasterServer = "http://46.101.1.92/";
+            MasterServer = "http://west.us.seven-labs.com/gtavmp/";
             Filterscripts = new string[] { "" };
         }
     }

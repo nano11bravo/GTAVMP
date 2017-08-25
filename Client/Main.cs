@@ -1,4 +1,11 @@
-﻿using System;
+﻿using GTA;
+using GTA.Math;
+using GTA.Native;
+using Lidgren.Network;
+using NativeUI;
+using Newtonsoft.Json;
+using ProtoBuf;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -6,16 +13,9 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using GTA;
-using GTA.Math;
-using GTA.Native;
-using Lidgren.Network;
-using NativeUI;
-using Newtonsoft.Json;
-using ProtoBuf;
 using Control = GTA.Control;
 
-namespace GTACoOp
+namespace GTAClient
 {
     public class Main : Script
     {
@@ -277,10 +277,10 @@ namespace GTACoOp
             _settingsMenu.AddItem(trafficItem);
             _settingsMenu.AddItem(chatItem);
 
-            #if DEBUG
+            //#if DEBUG
             _settingsMenu.AddItem(modeItem);
             _settingsMenu.AddItem(spawnItem);
-            #endif
+            //#endif
 
             _mainMenu.RefreshIndex();
             _settingsMenu.RefreshIndex();

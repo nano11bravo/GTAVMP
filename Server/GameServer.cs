@@ -11,6 +11,7 @@ using System.Threading;
 using System.Xml.Serialization;
 using Lidgren.Network;
 using ProtoBuf;
+using GTAServer.Libraries;
 
 namespace GTAServer
 {
@@ -130,6 +131,7 @@ namespace GTAServer
             {
                 _lastAnnounceDateTime = DateTime.Now;
                 Console.WriteLine("Announcing to master server...");
+                Log.Instance.Info($"Announcing to master server... ({MasterServer})");
                 AnnounceSelfToMaster();
             }
 
@@ -138,6 +140,7 @@ namespace GTAServer
                 try
                 {
                     Console.WriteLine("Loading gamemode...");
+                    Log.Instance.Info($"Loading gamemode... ({GamemodeName.ToLower()})");
 
                     try
                     {
@@ -156,6 +159,7 @@ namespace GTAServer
                     if (!validTypes.Any())
                     {
                         Console.WriteLine("ERROR: No classes that inherit from ServerScript have been found in the assembly. Starting freeroam.");
+                        Log.Instance.Error(" No classes that inherit from ServerScript have been found in the assembly. Starting freeroam.");
                         return;
                     }
 
@@ -165,6 +169,7 @@ namespace GTAServer
                 }
                 catch (Exception e)
                 {
+                    Log.Instance.Error(e);
                     Console.WriteLine("ERROR: Error while loading script: " + e.Message + " at " + e.Source +
                                       ".\nStack Trace:" + e.StackTrace);
                     Console.WriteLine("Inner Exception: ");
@@ -178,6 +183,8 @@ namespace GTAServer
             }
 
             Console.WriteLine("Loading filterscripts..");
+            Log.Instance.Info("Loading filterscripts..");
+
             var list = new List<ServerScript>();
             foreach (var path in filterscripts)
             {
@@ -200,6 +207,7 @@ namespace GTAServer
                 catch (Exception ex)
                 {
                     Console.WriteLine("Failed to load filterscript \"" + path + "\", error: " + ex.Message);
+                    Log.Instance.Error("Failed to load filterscript \"" + path + "\", error: " + ex.Message);
                 }
             }
 
@@ -207,6 +215,7 @@ namespace GTAServer
             {
                 fs.Start();
                 Console.WriteLine("Starting filterscript " + fs.Name + "...");
+                Log.Instance.Info("Starting filterscript " + fs.Name + "...");
             });
             _filterscripts = list;
         }
@@ -219,9 +228,10 @@ namespace GTAServer
                 {
                     wb.UploadData(MasterServer, Encoding.UTF8.GetBytes(Port.ToString()));
                 }
-                catch (WebException)
+                catch (WebException ex)
                 {
                     Console.WriteLine("Failed to announce self: master server is not available at this time.");
+                    Log.Instance.Error("Failed to announce self: master server is not available at this time.\nStack Trace:\n" + ex.StackTrace);
                 }
             }
         }
@@ -281,6 +291,7 @@ namespace GTAServer
                         if (isPing == "ping")
                         {
                             Console.WriteLine("INFO: ping received from " + msg.SenderEndPoint.Address.ToString());
+                            Log.Instance.Info("Ping received from " + msg.SenderEndPoint.Address.ToString());
                             var pong = Server.CreateMessage();
                             pong.Write("pong");
                             Server.SendMessage(pong, client.NetConnection, NetDeliveryMethod.ReliableOrdered);
@@ -289,7 +300,10 @@ namespace GTAServer
                         {
                             int playersonline = 0;
                             lock (Clients) playersonline = Clients.Count;
+
                             Console.WriteLine("INFO: query received from " + msg.SenderEndPoint.Address.ToString());
+                            Log.Instance.Info("Query received from " + msg.SenderEndPoint.Address.ToString());
+
                             var pong = Server.CreateMessage();
                             pong.Write(Name + "%" + PasswordProtected + "%" + playersonline + "%" + MaxPlayers + "%" + GamemodeName);
                             Server.SendMessage(pong, client.NetConnection, NetDeliveryMethod.ReliableOrdered);
@@ -318,6 +332,7 @@ namespace GTAServer
                         if ((ScriptVersion)connReq.ScriptVersion == ScriptVersion.Unknown)
                         {
                             client.NetConnection.Deny("Unknown version. Please update your client.");
+                            Log.Instance.Info($"[KICK] {client.DisplayName} for 'Unknown client version.'");
                             Server.Recycle(msg);
                             continue;
                         }
@@ -331,7 +346,9 @@ namespace GTAServer
                                 if (Password != connReq.Password)
                                 {
                                     client.NetConnection.Deny("Wrong password.");
+
                                     Console.WriteLine("Player connection refused: wrong password.");
+                                    Log.Instance.Info($"[KICK] {client.DisplayName} for 'Incorrect Password'");
 
                                     if (_gamemode != null) _gamemode.OnConnectionRefused(client, "Wrong password");
                                     if (_filterscripts != null) _filterscripts.ForEach(fs => fs.OnConnectionRefused(client, "Wrong password"));
@@ -370,6 +387,7 @@ namespace GTAServer
                             if (_filterscripts != null) _filterscripts.ForEach(fs => fs.OnIncomingConnection(client));
 
                             Console.WriteLine("New incoming connection: " + client.Name + " (" + client.DisplayName + ")");
+                            Log.Instance.Info("New incoming connection: " + client.Name + " (" + client.DisplayName + ")");
                         }
                         else
                         {
@@ -393,6 +411,7 @@ namespace GTAServer
                                 SendNotificationToAll("Player ~h~" + client.DisplayName + "~h~ has connected.");
 
                             Console.WriteLine("New player connected: " + client.Name + " (" + client.DisplayName + ")");
+                            Log.Instance.Info("New player connected: " + client.Name + " (" + client.DisplayName + ")");
                         }
                         else if (newStatus == NetConnectionStatus.Disconnected)
                         {
@@ -416,6 +435,7 @@ namespace GTAServer
                                     SendToAll(dcObj, PacketType.PlayerDisconnect, true);
 
                                     Console.WriteLine("Player disconnected: " + client.Name + " (" + client.DisplayName + ")");
+                                    Log.Instance.Info("Player disconnected: " + client.Name + " (" + client.DisplayName + ")");
 
                                     Clients.Remove(client);
                                 }
@@ -463,7 +483,9 @@ namespace GTAServer
                                                 data.Id = client.NetConnection.RemoteUniqueIdentifier;
                                                 data.Sender = client.DisplayName;
                                                 SendToAll(data, PacketType.ChatData, true);
+
                                                 Console.WriteLine(data.Sender + ": " + data.Message);
+                                                Log.Instance.Info(data.Sender + ": " + data.Message);
                                             }
                                         }
                                     }
@@ -491,10 +513,13 @@ namespace GTAServer
                                             client.IsInVehicle = true;
 
                                             SendToAll(data, PacketType.VehiclePositionData, false, client);
+                                            Log.Instance.Debug($"[{client.NetConnection.RemoteUniqueIdentifier}] " + client.DisplayName + " => [VehiclePosition] X = " + data.Position.X + ", Y = " + data.Position.Y + ", Z = " + data.Position.Z);
                                         }
                                     }
-                                    catch (IndexOutOfRangeException)
-                                    { }
+                                    catch (IndexOutOfRangeException ex)
+                                    {
+                                        Log.Instance.Error(ex);
+                                    }
                                 }
                                 break;
                             case PacketType.PedPositionData:
@@ -516,8 +541,10 @@ namespace GTAServer
                                             SendToAll(data, PacketType.PedPositionData, false, client);
                                         }
                                     }
-                                    catch (IndexOutOfRangeException)
-                                    { }
+                                    catch (IndexOutOfRangeException ex)
+                                    {
+                                        Log.Instance.Error(ex);
+                                    }
                                 }
                                 break;
                             case PacketType.NpcVehPositionData:
@@ -551,8 +578,10 @@ namespace GTAServer
                                             SendToAll(data, PacketType.NpcPedPositionData, false, client);
                                         }
                                     }
-                                    catch (IndexOutOfRangeException)
-                                    { }
+                                    catch (IndexOutOfRangeException ex)
+                                    {
+                                        Log.Instance.Error(ex);
+                                    }
                                 }
                                 break;
                             case PacketType.WorldSharingStop:
@@ -615,6 +644,7 @@ namespace GTAServer
                         break;
                     default:
                         Console.WriteLine("WARN: Unhandled type: " + msg.MessageType);
+                        Log.Instance.Warn("Unhandled Message Type: " + msg.MessageType);
                         break;
                 }
                 Server.Recycle(msg);
@@ -631,6 +661,7 @@ namespace GTAServer
             msg.Write(data.Length);
             msg.Write(data);
             Server.SendToAll(msg, important ? NetDeliveryMethod.ReliableOrdered : NetDeliveryMethod.ReliableSequenced);
+            Log.Instance.Info($"[SendToAll] {msg.Data}");
         }
 
         public void SendToAll(object newData, PacketType packetType, bool important, Client exclude)

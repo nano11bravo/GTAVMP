@@ -12,7 +12,7 @@ namespace AdminTools.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.1.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -61,7 +61,7 @@ namespace AdminTools.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Welcome to this GTA 5 Co-op Server! Max Ping: 250")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Welcome to the SL Development Server! Max Ping: 250")]
         public string MOTD {
             get {
                 return ((string)(this["MOTD"]));
@@ -157,7 +157,7 @@ namespace AdminTools.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("[~h~EU~n~/~b~G~r~E~y~R~n~] Blu\'s World (LSPD:FR|Roleplay|Fun)")]
+        [global::System.Configuration.DefaultSettingValueAttribute("[~h~EU~n~/~b~G~r~E~y~R~n~] -=[ Seven-Labs Development Server ]=-")]
         public string ServerName {
             get {
                 return ((string)(this["ServerName"]));

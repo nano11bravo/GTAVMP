@@ -18,6 +18,10 @@ namespace GTAServer
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool DeleteFile(string name);
 
+        /// <summary>
+        /// Main Routine - Starting point for the server.
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
             var settings = ReadSettings(Program.Location + "Settings.xml");
@@ -42,12 +46,19 @@ namespace GTAServer
             while (true)
             {
                 ServerInstance.Tick();
-                System.Threading.Thread.Sleep(10); // Reducing CPU Usage (Win7 from average 15 % to 0-1 %, Linux from 100 % to 0-2 %)
+                // TODO: [SDW] Server.Main - Evaluate reducing CPU Usage (Win7 from average 15 % to 0-1 %, Linux from 100 % to 0-2 %)
+                System.Threading.Thread.Sleep(10); 
             }
         }
 
+        /// <summary>
+        /// ReadSettings - Pull in the server settings from a flat file. 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         static ServerSettings ReadSettings(string path)
         {
+            // TODO: [SDW] Server.ReadSettings - Rewrite the settings file handling to a class, extremely bad way of doing it currently.
             var ser = new XmlSerializer(typeof(ServerSettings));
 
             ServerSettings settings = null;

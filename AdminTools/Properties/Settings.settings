@@ -12,7 +12,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="MOTD" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Welcome to this GTA 5 Co-op Server! Max Ping: 250</Value>
+      <Value Profile="(Default)">Welcome to the SL Development Server! Max Ping: 250</Value>
     </Setting>
     <Setting Name="MaxPing" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">250</Value>
@@ -36,7 +36,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ServerName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">[~h~EU~n~/~b~G~r~E~y~R~n~] Blu's World (LSPD:FR|Roleplay|Fun)</Value>
+      <Value Profile="(Default)">[~h~EU~n~/~b~G~r~E~y~R~n~] -=[ Seven-Labs Development Server ]=-</Value>
     </Setting>
     <Setting Name="OnlyAsciiNickName" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
