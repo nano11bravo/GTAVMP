@@ -11,5 +11,11 @@
     <Setting Name="SentinelProtocol" Type="System.String" Scope="Application">
       <Value Profile="(Default)">udp</Value>
     </Setting>
+    <Setting Name="SentinelNLogData" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="SentinelTarget" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">sentinal</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -4,9 +4,14 @@ using NLog.Targets;
 
 namespace Common
 {
-    internal static class Log
+    public static class Log
     {
         public static Logger Instance { get; private set; }
+
+        /// <summary>
+        /// Log Routine - Setup some basic configuration for NLog
+        /// Also includes the configuration of Sentinel 
+        /// </summary>
         static Log()
         {
             #region DEBUG STUFF
@@ -37,12 +42,12 @@ namespace Common
             // Setup the logging view for Sentinel - http://sentinel.codeplex.com
             var sentinalTarget = new NLogViewerTarget()
             {
-                Name = "sentinal",
-                Address = "udp://10.0.7.24:9999",
-                IncludeNLogData = true
+                Name = Properties.Settings.Default.SentinelTarget,
+                Address = $"{Properties.Settings.Default.SentinelProtocol}://{Properties.Settings.Default.SentinelHost}:{Properties.Settings.Default.SentinelPort}",
+                IncludeNLogData = Properties.Settings.Default.SentinelNLogData
             };
             var sentinalRule = new LoggingRule("*", LogLevel.Trace, sentinalTarget);
-            LogManager.Configuration.AddTarget("sentinal", sentinalTarget);
+            LogManager.Configuration.AddTarget(Properties.Settings.Default.SentinelTarget, sentinalTarget);
             LogManager.Configuration.LoggingRules.Add(sentinalRule);
 
             LogManager.ReconfigExistingLoggers();

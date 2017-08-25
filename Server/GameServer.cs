@@ -11,7 +11,7 @@ using System.Threading;
 using System.Xml.Serialization;
 using Lidgren.Network;
 using ProtoBuf;
-using GTAServer.Libraries;
+using Common; // Logger and stuff
 
 namespace GTAServer
 {
@@ -196,8 +196,9 @@ namespace GTAServer
                     {
                         Program.DeleteFile(Program.Location + "filterscripts" + Path.DirectorySeparatorChar + GamemodeName + ".dll:Zone.Identifier");
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        Log.Instance.Error(ex);
                     }
 
                     var fsAsm = Assembly.LoadFrom(Program.Location + "filterscripts" + Path.DirectorySeparatorChar + path + ".dll");
@@ -291,7 +292,7 @@ namespace GTAServer
                         if (isPing == "ping")
                         {
                             Console.WriteLine("INFO: ping received from " + msg.SenderEndPoint.Address.ToString());
-                            Log.Instance.Info("Ping received from " + msg.SenderEndPoint.Address.ToString());
+                            Log.Instance.Debug("Ping received from " + msg.SenderEndPoint.Address.ToString());
                             var pong = Server.CreateMessage();
                             pong.Write("pong");
                             Server.SendMessage(pong, client.NetConnection, NetDeliveryMethod.ReliableOrdered);
@@ -325,6 +326,7 @@ namespace GTAServer
                         if (connReq == null)
                         {
                             client.NetConnection.Deny("Connection Object is null");
+                            Log.Instance.Warn($"[KICK] {client.Name}, Reason: Connection Object is null.");
                             Server.Recycle(msg);
                             continue;
                         }
@@ -332,7 +334,7 @@ namespace GTAServer
                         if ((ScriptVersion)connReq.ScriptVersion == ScriptVersion.Unknown)
                         {
                             client.NetConnection.Deny("Unknown version. Please update your client.");
-                            Log.Instance.Info($"[KICK] {client.DisplayName} for 'Unknown client version.'");
+                            Log.Instance.Info($"[KICK] {client.Name}, Reason: Unknown client version.");
                             Server.Recycle(msg);
                             continue;
                         }
@@ -348,7 +350,7 @@ namespace GTAServer
                                     client.NetConnection.Deny("Wrong password.");
 
                                     Console.WriteLine("Player connection refused: wrong password.");
-                                    Log.Instance.Info($"[KICK] {client.DisplayName} for 'Incorrect Password'");
+                                    Log.Instance.Info($"[KICK] {client.Name}, Reason: Incorrect Password");
 
                                     if (_gamemode != null) _gamemode.OnConnectionRefused(client, "Wrong password");
                                     if (_filterscripts != null) _filterscripts.ForEach(fs => fs.OnConnectionRefused(client, "Wrong password"));
@@ -392,7 +394,10 @@ namespace GTAServer
                         else
                         {
                             client.NetConnection.Deny("No available player slots.");
+
                             Console.WriteLine("Player connection refused: server full.");
+                            Log.Instance.Warn($"[KICK] {client.Name}, Reason: Server full");
+
                             if (_gamemode != null) _gamemode.OnConnectionRefused(client, "Server is full");
                             if (_filterscripts != null) _filterscripts.ForEach(fs => fs.OnConnectionRefused(client, "Server is full"));
                         }
@@ -400,6 +405,7 @@ namespace GTAServer
                     case NetIncomingMessageType.StatusChanged:
                         var newStatus = (NetConnectionStatus)msg.ReadByte();
 
+                        // Player has connected to server.
                         if (newStatus == NetConnectionStatus.Connected)
                         {
                             bool sendMsg = true;
@@ -410,9 +416,12 @@ namespace GTAServer
                             if (sendMsg)
                                 SendNotificationToAll("Player ~h~" + client.DisplayName + "~h~ has connected.");
 
+                            SendNotificationToPlayer(client, "Welcome to the dev server!!!", true);
+
                             Console.WriteLine("New player connected: " + client.Name + " (" + client.DisplayName + ")");
                             Log.Instance.Info("New player connected: " + client.Name + " (" + client.DisplayName + ")");
                         }
+                        // Player has disconnected from server.
                         else if (newStatus == NetConnectionStatus.Disconnected)
                         {
                             lock (Clients)
@@ -435,7 +444,7 @@ namespace GTAServer
                                     SendToAll(dcObj, PacketType.PlayerDisconnect, true);
 
                                     Console.WriteLine("Player disconnected: " + client.Name + " (" + client.DisplayName + ")");
-                                    Log.Instance.Info("Player disconnected: " + client.Name + " (" + client.DisplayName + ")");
+                                    Log.Instance.Info("[QUIT] " + client.Name + " (" + client.DisplayName + ")");
 
                                     Clients.Remove(client);
                                 }
