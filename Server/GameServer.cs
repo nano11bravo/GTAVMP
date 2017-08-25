@@ -256,8 +256,15 @@ namespace GTAServer
             }
         }
 
+        /// <summary>
+        /// Tick - This routine handles the processing of server elements such as broadcasting to the master list and client events.
+        /// TODO: [SDW] Server.Tick - Currently a single-threaded routine, which might benefit from Asynchronouslly being excuted in the future.
+        /// </summary>
         public void Tick()
         {
+            // TODO: [SDW] Server.Tick - Update our web map.
+
+
             if (AnnounceSelf && DateTime.Now.Subtract(_lastAnnounceDateTime).TotalMinutes >= 5)
             {
                 _lastAnnounceDateTime = DateTime.Now;
@@ -294,7 +301,7 @@ namespace GTAServer
                             Console.WriteLine("INFO: ping received from " + msg.SenderEndPoint.Address.ToString());
                             Log.Instance.Debug("Ping received from " + msg.SenderEndPoint.Address.ToString());
                             var pong = Server.CreateMessage();
-                            pong.Write("pong");
+                            pong.Write("pong"); // what is ping without pong anyways.
                             Server.SendMessage(pong, client.NetConnection, NetDeliveryMethod.ReliableOrdered);
                         }
                         if (isPing == "query")

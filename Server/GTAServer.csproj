@@ -89,7 +89,6 @@
   <ItemGroup>
     <Compile Include="ChatData.cs" />
     <Compile Include="GameServer.cs" />
-    <Compile Include="Libraries\Logging.cs" />
     <Compile Include="ServerScript.cs" />
     <Compile Include="NativeData.cs" />
     <Compile Include="Program.cs" />
