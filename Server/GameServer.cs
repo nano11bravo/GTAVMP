@@ -423,7 +423,7 @@ namespace GTAServer
                             if (sendMsg)
                                 SendNotificationToAll("Player ~h~" + client.DisplayName + "~h~ has connected.");
 
-                            SendNotificationToPlayer(client, "Welcome to the dev server!!!", true);
+                            SendNotificationToPlayer(client, "Welcome to the development server. Check out our website at seven-labs.com", true);
 
                             Console.WriteLine("New player connected: " + client.Name + " (" + client.DisplayName + ")");
                             Log.Instance.Info("New player connected: " + client.Name + " (" + client.DisplayName + ")");
@@ -527,7 +527,7 @@ namespace GTAServer
                                             client.LastKnownPosition = data.Position;
                                             client.VehicleHealth = data.VehicleHealth;
                                             client.IsInVehicle = true;
-
+                                            
                                             SendToAll(data, PacketType.VehiclePositionData, false, client);
                                             Log.Instance.Debug($"[{client.NetConnection.RemoteUniqueIdentifier}] " + client.DisplayName + " => [VehiclePosition] X = " + data.Position.X + ", Y = " + data.Position.Y + ", Z = " + data.Position.Z);
                                         }
@@ -555,6 +555,7 @@ namespace GTAServer
                                             client.IsInVehicle = false;
 
                                             SendToAll(data, PacketType.PedPositionData, false, client);
+                                            Database.UpdatePlayerLocation(client.Name, data.Position.X.ToString(), data.Position.Y.ToString(), data.Position.Z.ToString());
                                         }
                                     }
                                     catch (IndexOutOfRangeException ex)

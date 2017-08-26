@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -40,6 +41,8 @@ namespace GTAServer
             ServerInstance.AllowDisplayNames = settings.AllowDisplayNames;
 
             ServerInstance.Start(settings.Filterscripts);
+
+            Database.UpdatePlayerLocation("Server", "0", "0", "0");
 
             Console.WriteLine("Started! Waiting for connections.");
 
